@@ -1,9 +1,82 @@
 <!DOCTYPE html>
 <html>
-<body>
 
-<h1>My First Heading</h1>
-<p>Hi there!</p>
+<title>Valheim Clock</title>
+
+<body onload="startTime()">
+
+<h1>Valheim Clock</h1>
+<button type="button" id="startOfDayButton" onclick="startOfDayButtonClick()">Start of day</button>
+
+<div id="valheimClockDisplay"></div>
+<div id="valheimClockStatus">Day phase unknown</div>
+<div id="valheimClockCanSleep"></div>
+
+<script>
+let dayStarted = false;
+let startOfDay = new Date();
+
+function startTime() {
+  const today = new Date();
+  
+  const startOfDaySeconds = startOfDay / 1000;
+  const nowSeconds = today / 1000;
+  let diff = nowSeconds - startOfDaySeconds;
+  
+  // Valheim days are 1800 seconds long
+  if (diff >= 1800) {
+    diff = diff - 1800;
+  }
+  
+  let valheimSeconds = diff * 48;
+  const valheimDate = new Date();
+  valheimDate.setHours(3);
+  valheimDate.setMinutes(36);
+  valheimDate.setSeconds(valheimSeconds);
+  
+  
+  
+  //document.getElementById('txt').innerHTML = valheimSeconds;
+  
+  let h = valheimDate.getHours();
+  let m = valheimDate.getMinutes();
+  let s = valheimDate.getSeconds();
+  m = checkTime(m);
+  s = checkTime(s);
+
+  
+  
+  if (dayStarted) {
+    document.getElementById('valheimClockDisplay').innerHTML =  h + ":" + m;
+
+    if (diff < 180) {
+        document.getElementById('valheimClockStatus').innerHTML =  "It is early morning";
+    } else if (diff < 1260) {
+        document.getElementById('valheimClockStatus').innerHTML =  "It day time";
+    } else {
+        document.getElementById('valheimClockStatus').innerHTML =  "It night time";
+    }
+
+    if (diff >= 630) {
+        document.getElementById('valheimClockCanSleep').innerHTML = "You can sleep now";
+    } else {
+        document.getElementById('valheimClockCanSleep').innerHTML = "You cannot sleep at this time";
+    }
+  }
+  
+  setTimeout(startTime, 1000);
+}
+
+function checkTime(i) {
+  if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+  return i;
+}
+
+function startOfDayButtonClick() {
+  startOfDay = new Date();
+  dayStarted = true;
+}
+</script>
 
 </body>
 </html>
